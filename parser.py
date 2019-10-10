@@ -57,7 +57,7 @@ class PartialParse(object):
         Assume that the PartialParse is valid
         """
         # *** BEGIN YOUR CODE ***
-	if self.next == len(self.sentence) and len(self.stack) == 1 and self.stack[0] == 0:
+        if self.next == len(self.sentence) and len(self.stack) == 1 and self.stack[0] == 0:
             return True
         # *** END YOUR CODE ***
 
@@ -80,7 +80,7 @@ class PartialParse(object):
                 given the current state
         """
         # *** BEGIN YOUR CODE ***
-	if transition_id == self.shift_id and self.next < len(self.sentence):
+        if transition_id == self.shift_id and self.next < len(self.sentence):
             self.stack.append(self.next)
             self.next += 1
 
@@ -118,7 +118,7 @@ class PartialParse(object):
                 1, etc.
         """
         # *** BEGIN YOUR CODE ***
-	if not n and n != 0:
+        if not n and n != 0:
             n_to_get = len(self.arcs)
         else:
             n_to_get = n
@@ -158,7 +158,7 @@ class PartialParse(object):
                 1, etc.
         """
         # *** BEGIN YOUR CODE ***
-	if not n:
+        if not n:
             n_to_get = len(self.arcs)
         else:
             n_to_get = n
@@ -167,7 +167,7 @@ class PartialParse(object):
         n_in_list = 0
         word = self.sentence[sentence_idx][0]
 
-        for i in range(len(self.arcs)-1, -1, -1):
+        for i in range(len(self.arcs) - 1, -1, -1):
             idx_head = self.arcs[i][0]
             if self.sentence[idx_head][0] == word:
                 deps.append(self.arcs[i][1])
@@ -233,7 +233,7 @@ class PartialParse(object):
             raise ValueError('PartialParse already completed')
         transition_id, deprel = -1, None
         # *** BEGIN YOUR CODE ***
-	if self.complete:
+        if self.complete:
             raise ValueError('PartialParse already completed')
         transition_id, deprel = -1, None
         # *** BEGIN YOUR CODE ***
@@ -391,7 +391,7 @@ def _test_arcs(name, pp, ex_arcs):
              for arc in arcs],
             [(pp.sentence[arc[0]], pp.sentence[arc[1]], arc[2])
              for arc in ex_arcs]
-            )
+        )
 
 
 def _test_stack(name, pp, ex_stack):
@@ -403,7 +403,7 @@ def _test_stack(name, pp, ex_stack):
             name,
             [pp.sentence[x] for x in stack],
             [pp.sentence[x] for x in ex_stack]
-            )
+        )
 
 
 def _test_next(name, pp, ex_next):

@@ -25,7 +25,7 @@ def he_initializer(shape, **kwargs):
     Hint: You might find torch.normal() useful.
     """
     # *** BEGIN YOUR CODE ***
-    sigma = (2/shape[0])**0.5
+    sigma = (2 / shape[0]) ** 0.5
     out = torch.normal(0, float(sigma), shape)
     # *** END YOUR CODE ***
     return out
