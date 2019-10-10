@@ -26,7 +26,7 @@ def he_initializer(shape, **kwargs):
     """
     # *** BEGIN YOUR CODE ***
     sigma = (2 / shape[0]) ** 0.5
-    out = torch.normal(0, sigma, shape)
+    out = torch.normal(0, sigma, shape, requires_grad=True)
     # *** END YOUR CODE ***
     return out
 
