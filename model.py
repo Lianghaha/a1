@@ -14,7 +14,7 @@ from tqdm import tqdm
 from data import load_and_preprocess_data
 from data import score_arcs
 from initialization import he_initializer
-from parser123 import minibatch_parse
+from parser import minibatch_parse
 from util import one_hot_float
 
 
@@ -73,7 +73,7 @@ class ParserModel(nn.Module):
                 matrix of pre-trained word embeddings
         """
         # *** BEGIN YOUR CODE ***
-        self.word_embeddings = torch.tensor(word_embeddings, requires_grad=True)
+	self.word_embeddings = torch.tensor(word_embeddings, requires_grad=True)
         self.tag_embeddings = he_initializer((self.config.n_tag_ids, self.config.embed_size))
         self.deprel_embeddings = he_initializer((self.config.n_deprel_ids, self.config.embed_size))
         # *** END YOUR CODE ***
@@ -112,7 +112,7 @@ class ParserModel(nn.Module):
            and bias tensors (see the PyTorch tutorials for more details).
         """
         # *** BEGIN YOUR CODE ***
-        c = self.config
+	c = self.config
         N = c.n_word_features + c.n_tag_features + c.n_deprel_features
         self.W_h = he_initializer((N * c.embed_size, c.hidden_size))
         self.b_h = torch.tensor((float(c.hidden_size),), requires_grad=True)
@@ -187,7 +187,7 @@ class ParserModel(nn.Module):
            using torch.cat and return the result.
         """
         # *** BEGIN YOUR CODE ***
-        word = self.embedding_lookup(word_id_batch, self.config.n_word_ids, self.word_embeddings)
+	word = self.embedding_lookup(word_id_batch, self.config.n_word_ids, self.word_embeddings)
         tag = self.embedding_lookup(tag_id_batch, self.config.n_tag_ids, self.word_embeddings)
         deprel = self.embedding_lookup(deprel_id_batch, self.config.n_deprel_ids, self.word_embeddings)
         x1 = torch.cat((word, tag), 1)
@@ -238,7 +238,7 @@ class ParserModel(nn.Module):
 
         # *** BEGIN YOUR CODE ***
         # *** END YOUR CODE ***
-        #return pred
+        return pred
 
     def get_loss(self, prediction_batch, class_batch):
         """Calculate the value of the loss function
@@ -260,7 +260,7 @@ class ParserModel(nn.Module):
         """
         # *** BEGIN YOUR CODE ***
         # *** END YOUR CODE ***
-        #return loss
+        return loss
 
     def add_optimizer(self):
         """Sets up the optimizer.
@@ -437,4 +437,4 @@ def main(debug):
 
 
 if __name__ == '__main__':
-    main(True)
+    main(False)

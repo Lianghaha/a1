@@ -57,7 +57,7 @@ class PartialParse(object):
         Assume that the PartialParse is valid
         """
         # *** BEGIN YOUR CODE ***
-        if self.next == len(self.sentence) and len(self.stack) == 1 and self.stack[0] == 0:
+	if self.next == len(self.sentence) and len(self.stack) == 1 and self.stack[0] == 0:
             return True
         # *** END YOUR CODE ***
 
@@ -80,7 +80,7 @@ class PartialParse(object):
                 given the current state
         """
         # *** BEGIN YOUR CODE ***
-        if transition_id == self.shift_id and self.next < len(self.sentence):
+	if transition_id == self.shift_id and self.next < len(self.sentence):
             self.stack.append(self.next)
             self.next += 1
 
@@ -118,8 +118,7 @@ class PartialParse(object):
                 1, etc.
         """
         # *** BEGIN YOUR CODE ***
-
-        if not n and n != 0:
+	if not n and n != 0:
             n_to_get = len(self.arcs)
         else:
             n_to_get = n
@@ -159,7 +158,7 @@ class PartialParse(object):
                 1, etc.
         """
         # *** BEGIN YOUR CODE ***
-        if not n:
+	if not n:
             n_to_get = len(self.arcs)
         else:
             n_to_get = n
@@ -231,6 +230,10 @@ class PartialParse(object):
             target graph
         """
         if self.complete:
+            raise ValueError('PartialParse already completed')
+        transition_id, deprel = -1, None
+        # *** BEGIN YOUR CODE ***
+	if self.complete:
             raise ValueError('PartialParse already completed')
         transition_id, deprel = -1, None
         # *** BEGIN YOUR CODE ***
@@ -524,7 +527,6 @@ def test_minibatch_parse():
         pp = PartialParse(sentence)
         pp.arcs = sentence_arcs
         partial_parses.append(pp)
-
     _test_arcs("minibatch_parse[0]", partial_parses[0],
                [(0, 1, 'deprel'), (1, 2, 'deprel'), (2, 3, 'deprel')])
     _test_arcs("minibatch_parse[1]", partial_parses[1],
