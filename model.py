@@ -238,6 +238,9 @@ class ParserModel(nn.Module):
                                        torch.tensor(deprel_id_batch))
 
         # *** BEGIN YOUR CODE ***
+        h = torch.nn.functional.relu(x * self.W_h + self.b_h)
+        h_drop = torch.nn.functional.dropout(h, self.config.dropout)
+        pred = h_drop * self.W_h + self.b_o
         # *** END YOUR CODE ***
         return pred
 
@@ -260,6 +263,7 @@ class ParserModel(nn.Module):
             loss: A 0d tensor (scalar)
         """
         # *** BEGIN YOUR CODE ***
+        loss = F.cross_entropy(prediction_batch, class_batch)
         # *** END YOUR CODE ***
         return loss
 
@@ -278,6 +282,7 @@ class ParserModel(nn.Module):
           change the attribute name!
         """
         # *** BEGIN YOUR CODE ***
+        self.optimizer = torch.optim.Adam
         # *** END YOUR CODE ***
 
     def _fit_batch(self, word_id_batch, tag_id_batch, deprel_id_batch,
@@ -438,4 +443,4 @@ def main(debug):
 
 
 if __name__ == '__main__':
-    main(False)
+    main(True)
