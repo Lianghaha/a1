@@ -233,10 +233,6 @@ class PartialParse(object):
             raise ValueError('PartialParse already completed')
         transition_id, deprel = -1, None
         # *** BEGIN YOUR CODE ***
-        if self.complete:
-            raise ValueError('PartialParse already completed')
-        transition_id, deprel = -1, None
-        # *** BEGIN YOUR CODE ***
         idx_first = self.stack[-1]
         idx_second = self.stack[len(self.stack) - 2]
 
