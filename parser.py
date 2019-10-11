@@ -177,7 +177,7 @@ class PartialParse(object):
         #     num = n if len(deps) > n else len(deps)
         # deps = deps[:num]
 
-        if not n:
+        if not n and n != 0:
             n_to_get = len(self.arcs)
         else:
             n_to_get = n
@@ -185,12 +185,13 @@ class PartialParse(object):
         deps = []
         word = self.sentence[sentence_idx][0]
 
-        for i in range(len(self.arcs) - 1, -1, -1):
-            idx_head = self.arcs[i][0]
+        for dependency in self.arcs:
+            idx_head = dependency[0]
             if self.sentence[idx_head][0] == word:
-                deps.append(self.arcs[i][1])
+                deps.append(dependency[1])
 
-        deps.sort(reverse=True)
+        deps.sort()
+        deps.reverse()
         deps = deps[0:n_to_get]
         # *** END YOUR CODE ***
         return deps
