@@ -57,9 +57,9 @@ class PartialParse(object):
         Assume that the PartialParse is valid
         """
         # *** BEGIN YOUR CODE ***
-        return self.next == len(self.sentence) and len(self.stack) == 1
-        # if self.next == len(self.sentence) and len(self.stack) == 1:
-        #     return True
+        # return self.next == len(self.sentence) and len(self.stack) == 1
+        if self.next == len(self.sentence) and len(self.stack) == 1:
+            return True
         # *** END YOUR CODE ***
 
     def parse_step(self, transition_id, deprel=None):
@@ -81,40 +81,40 @@ class PartialParse(object):
                 given the current state
         """
         # *** BEGIN YOUR CODE ***
-        if transition_id == self.left_arc_id:
-            if len(self.stack) < 3:
-                raise ValueError
-            self.arcs.append((self.stack[-1], self.stack[-2], deprel))
-            self.stack.pop(-2)
-        elif transition_id == self.right_arc_id:
-            if len(self.stack) < 2:
-                raise ValueError
-            self.arcs.append((self.stack[-2], self.stack[-1], deprel))
-            self.stack.pop(-1)
-        elif transition_id == self.shift_id:
-            if (self.next >= len(self.sentence)):
-                raise ValueError(
-                    "Detect next {} is greater or equal to length of sentence {}".format(self.next, len(self.sentence)))
-            self.stack.append(self.next)
-            self.next += 1
-        else:
-            raise ValueError
-        # if transition_id == self.shift_id and self.next < len(self.sentence):
+        # if transition_id == self.left_arc_id:
+        #     if len(self.stack) < 3:
+        #         raise ValueError
+        #     self.arcs.append((self.stack[-1], self.stack[-2], deprel))
+        #     self.stack.pop(-2)
+        # elif transition_id == self.right_arc_id:
+        #     if len(self.stack) < 2:
+        #         raise ValueError
+        #     self.arcs.append((self.stack[-2], self.stack[-1], deprel))
+        #     self.stack.pop(-1)
+        # elif transition_id == self.shift_id:
+        #     if (self.next >= len(self.sentence)):
+        #         raise ValueError(
+        #             "Detect next {} is greater or equal to length of sentence {}".format(self.next, len(self.sentence)))
         #     self.stack.append(self.next)
         #     self.next += 1
-        #
-        # elif transition_id == self.left_arc_id and len(self.stack) > 2:
-        #     idx_dep = self.stack.pop(-2)
-        #     idx_head = self.stack[-1]
-        #     self.arcs.append((idx_head, idx_dep, deprel))
-        #
-        # elif transition_id == self.right_arc_id and len(self.stack) > 1:
-        #     idx_dep = self.stack.pop(-1)
-        #     idx_head = self.stack[-1]
-        #     self.arcs.append((idx_head, idx_dep, deprel))
-        #
         # else:
-        #     raise ValueError()
+        #     raise ValueError
+        if transition_id == self.shift_id and self.next < len(self.sentence):
+            self.stack.append(self.next)
+            self.next += 1
+
+        elif transition_id == self.left_arc_id and len(self.stack) > 2:
+            idx_dep = self.stack.pop(-2)
+            idx_head = self.stack[-1]
+            self.arcs.append((idx_head, idx_dep, deprel))
+
+        elif transition_id == self.right_arc_id and len(self.stack) > 1:
+            idx_dep = self.stack.pop(-1)
+            idx_head = self.stack[-1]
+            self.arcs.append((idx_head, idx_dep, deprel))
+
+        else:
+            raise ValueError()
         # *** END YOUR CODE ***
 
     def get_n_leftmost_deps(self, sentence_idx, n=None):
