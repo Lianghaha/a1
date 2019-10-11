@@ -74,9 +74,9 @@ class ParserModel(nn.Module):
                 matrix of pre-trained word embeddings
         """
         # *** BEGIN YOUR CODE ***
-        self.word_embeddings = nn.Parameter(torch.tensor(word_embeddings, requires_grad=True), requires_grad=True)
-        self.tag_embeddings = nn.Parameter(he_initializer((self.config.n_tag_ids, self.config.embed_size)), requires_grad=True)
-        self.deprel_embeddings = nn.Parameter(he_initializer((self.config.n_deprel_ids, self.config.embed_size)), requires_grad=True)
+        self.word_embeddings = nn.Parameter(torch.tensor(word_embeddings, requires_grad=True))
+        self.tag_embeddings = nn.Parameter(he_initializer((self.config.n_tag_ids, self.config.embed_size)))
+        self.deprel_embeddings = nn.Parameter(he_initializer((self.config.n_deprel_ids, self.config.embed_size)))
         # *** END YOUR CODE ***
 
     def create_weights_biases(self):
@@ -268,7 +268,7 @@ class ParserModel(nn.Module):
             loss: A 0d tensor (scalar)
         """
         # *** BEGIN YOUR CODE ***
-        loss = F.cross_entropy(prediction_batch, class_batch, size_average=False)
+        loss = F.cross_entropy(prediction_batch, class_batch, size_average=True)
         # *** END YOUR CODE ***
         return loss
 
