@@ -320,6 +320,7 @@ def minibatch_parse(sentences, model, batch_size):
             arcs[i] should contain the arcs for sentences[i]).
     """
     # *** BEGIN YOUR CODE ***
+    '''
     arcs = []
     partial_parsers = []
     for sentence in sentences:
@@ -339,6 +340,24 @@ def minibatch_parse(sentences, model, batch_size):
                 unfinished_parses = unfinished_parses[:i] + unfinished_parses[i + 1:]
     for parser in partial_parsers:
         arcs.append(parser.arcs)
+    '''
+    arcs = [[] for i in range(len(sentences))]
+    partial_parses = [PartialParse(s) for s in sentences]
+    unfinished_parses = [i for i in range(len(sentences))]
+    while unfinished_parses:
+        batch_parses_idx = unfinished_parses[:batch_size]
+        batch_parses = [partial_parses[i] for i in batch_parses_idx]
+        td_pairs = model.predict(batch_parses)
+        for i, td_pair in enumerate(td_pairs):
+            parse_idx = unfinished_parses[i]
+            try:
+                partial_parses[parse_idx].parse_step(*td_pair)
+                if partial_parses[parse_idx].complete:
+                    arcs[parse_idx] = partial_parses[parse_idx].arcs
+                    batch_parses_idx.remove(parse_idx)
+            except ValueError:
+                batch_parses_idx.remove(parse_idx)
+        unfinished_parses = batch_parses_idx + unfinished_parses[batch_size:]
     # *** END YOUR CODE ***
     return arcs
 

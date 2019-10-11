@@ -74,9 +74,9 @@ class ParserModel(nn.Module):
                 matrix of pre-trained word embeddings
         """
         # *** BEGIN YOUR CODE ***
-        self.word_embeddings = nn.Parameter(torch.tensor(word_embeddings, requires_grad=True))
-        self.tag_embeddings = nn.Parameter(he_initializer((self.config.n_tag_ids, self.config.embed_size)))
-        self.deprel_embeddings = nn.Parameter(he_initializer((self.config.n_deprel_ids, self.config.embed_size)))
+        self.word_embeddings = torch.tensor(word_embeddings, requires_grad=True)
+        self.tag_embeddings = he_initializer((self.config.n_tag_ids, self.config.embed_size))
+        self.deprel_embeddings = he_initializer((self.config.n_deprel_ids, self.config.embed_size))
         # *** END YOUR CODE ***
 
     def create_weights_biases(self):
@@ -115,10 +115,10 @@ class ParserModel(nn.Module):
         # *** BEGIN YOUR CODE ***
         c = self.config
         N = c.n_word_features + c.n_tag_features + c.n_deprel_features
-        self.W_h = nn.Parameter(he_initializer((N * c.embed_size, c.hidden_size)))
-        self.b_h = nn.Parameter(torch.zeros((c.hidden_size,), requires_grad=True))
-        self.W_o = nn.Parameter(he_initializer((c.hidden_size, c.n_classes)))
-        self.b_o = nn.Parameter(torch.zeros((c.n_classes,), requires_grad=True))
+        self.W_h = he_initializer((N * c.embed_size, c.hidden_size))
+        self.b_h = torch.zeros((c.hidden_size,), requires_grad=True)
+        self.W_o = he_initializer((c.hidden_size, c.n_classes))
+        self.b_o = torch.zeros((c.n_classes,), requires_grad=True)
         # *** END YOUR CODE ***
 
     def embedding_lookup(self, id_batch, n_ids, embedding_matrix):
@@ -285,7 +285,8 @@ class ParserModel(nn.Module):
           change the attribute name!
         """
         # *** BEGIN YOUR CODE ***
-        self.optimizer = torch.optim.Adam(self.parameters(), self.config.lr)
+        self.optimizer = torch.optim.Adam([self.word_embeddings, self.tag_embeddings, self.deprel_embeddings, self.W_h,
+                                           self.W_o, self.b_o, self.b_h], self.config.lr)
         # *** END YOUR CODE ***
 
     def _fit_batch(self, word_id_batch, tag_id_batch, deprel_id_batch,
