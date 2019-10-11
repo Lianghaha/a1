@@ -57,7 +57,7 @@ class PartialParse(object):
         Assume that the PartialParse is valid
         """
         # *** BEGIN YOUR CODE ***
-        if self.next == len(self.sentence) and len(self.stack) == 1 and self.stack[0] == 0:
+        if self.next == len(self.sentence) and len(self.stack) == 1:
             return True
         # *** END YOUR CODE ***
 
