@@ -301,6 +301,7 @@ def minibatch_parse(sentences, model, batch_size):
             arcs[i] should contain the arcs for sentences[i]).
     """
     # *** BEGIN YOUR CODE ***
+    '''
     arcs = []
     partial_parsers = []
     for sentence in sentences:
@@ -315,12 +316,33 @@ def minibatch_parse(sentences, model, batch_size):
             deprel = transitions[i][1]
             try:
                 minibatch[i].parse_step(transition_id, deprel)
+                if minibatch[i].complete:
+                    arcs.append(minibatch[i].arcs)
+                    unfinished_parses = unfinished_parses[:i] + unfinished_parses[i + 1:]
             except ValueError:
+                arcs.append(minibatch[i].arcs)
                 unfinished_parses = unfinished_parses[:i] + unfinished_parses[i + 1:]
-            if minibatch[i].complete:
+    '''
+    arcs = []
+    partial_parsers = []
+    for sentence in sentences:
+        partial_parsers.append(PartialParse(sentence))
+    unfinished_parses = partial_parsers
+    while unfinished_parses:
+        minibatch = unfinished_parses[:batch_size]
+        transitions = model.predict(minibatch)
+        for i in range(len(minibatch)):
+            transition_id = transitions[i][0]
+            deprel = transitions[i][1]
+            try:
+                minibatch[i].parse_step(transition_id, deprel)
+                if minibatch[i].complete:
+                    arcs.append(minibatch[i].arcs)
+                    unfinished_parses = unfinished_parses[:i] + unfinished_parses[i + 1:]
+            except ValueError:
+                arcs.append(minibatch[i].arcs)
                 unfinished_parses = unfinished_parses[:i] + unfinished_parses[i + 1:]
-    for parser in partial_parsers:
-        arcs.append(parser.arcs)
+
     # *** END YOUR CODE ***
     return arcs
 
