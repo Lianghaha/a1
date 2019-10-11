@@ -301,15 +301,15 @@ def minibatch_parse(sentences, model, batch_size):
             arcs[i] should contain the arcs for sentences[i]).
     """
     # *** BEGIN YOUR CODE ***
-    '''
+
     arcs = []
-    partial_parsers = []
+    partial_parses = []
     for sentence in sentences:
-        partial_parsers.append(PartialParse(sentence))
+        partial_parses.append(PartialParse(sentence))
     unfinished_parses = [i for i in range(len(sentences))]
     while unfinished_parses:
         idx_minibatch = unfinished_parses[:batch_size]
-        minibatch = [partial_parsers[idx] for idx in idx_minibatch]
+        minibatch = [partial_parses[idx] for idx in idx_minibatch]
         transitions = model.predict(minibatch)
         for i in range(len(minibatch)):
             transition_id = transitions[i][0]
@@ -318,31 +318,10 @@ def minibatch_parse(sentences, model, batch_size):
                 minibatch[i].parse_step(transition_id, deprel)
                 if minibatch[i].complete:
                     arcs.append(minibatch[i].arcs)
-                    unfinished_parses = unfinished_parses[:i] + unfinished_parses[i + 1:]
+                    unfinished_parses.remove(idx_minibatch[i])
             except ValueError:
                 arcs.append(minibatch[i].arcs)
-                unfinished_parses = unfinished_parses[:i] + unfinished_parses[i + 1:]
-    '''
-    arcs = []
-    partial_parsers = []
-    for sentence in sentences:
-        partial_parsers.append(PartialParse(sentence))
-    unfinished_parses = partial_parsers
-    while unfinished_parses:
-        minibatch = unfinished_parses[:batch_size]
-        transitions = model.predict(minibatch)
-        for i in range(len(minibatch)):
-            transition_id = transitions[i][0]
-            deprel = transitions[i][1]
-            try:
-                minibatch[i].parse_step(transition_id, deprel)
-                if minibatch[i].complete:
-                    arcs.append(minibatch[i].arcs)
-                    unfinished_parses = unfinished_parses[:i] + unfinished_parses[i + 1:]
-            except ValueError:
-                arcs.append(minibatch[i].arcs)
-                unfinished_parses = unfinished_parses[:i] + unfinished_parses[i + 1:]
-
+                unfinished_parses.remove(idx_minibatch[i])
     # *** END YOUR CODE ***
     return arcs
 
