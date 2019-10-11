@@ -119,8 +119,6 @@ class ParserModel(nn.Module):
         self.b_h = nn.Parameter(torch.zeros((c.hidden_size,), requires_grad=True))
         self.W_o = nn.Parameter(he_initializer((c.hidden_size, c.n_classes)))
         self.b_o = nn.Parameter(torch.zeros((c.n_classes,), requires_grad=True))
-
-
         # *** END YOUR CODE ***
 
     def embedding_lookup(self, id_batch, n_ids, embedding_matrix):
@@ -268,7 +266,7 @@ class ParserModel(nn.Module):
             loss: A 0d tensor (scalar)
         """
         # *** BEGIN YOUR CODE ***
-        loss = F.cross_entropy(prediction_batch, class_batch, size_average=True)
+        loss = F.cross_entropy(prediction_batch, class_batch)
         # *** END YOUR CODE ***
         return loss
 
