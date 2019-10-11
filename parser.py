@@ -190,8 +190,7 @@ class PartialParse(object):
             if self.sentence[idx_head][0] == word:
                 deps.append(self.arcs[i][1])
 
-        deps.sort()
-        deps.reverse()
+        deps.sort(reverse=True)
         deps = deps[0:n_to_get]
         # *** END YOUR CODE ***
         return deps
