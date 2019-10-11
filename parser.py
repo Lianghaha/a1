@@ -154,7 +154,6 @@ class PartialParse(object):
                 1, etc.
         """
         # *** BEGIN YOUR CODE ***
-
         if not n and n != 0:
             n_to_get = len(self.arcs)
         else:
