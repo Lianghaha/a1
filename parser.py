@@ -191,7 +191,8 @@ class PartialParse(object):
                 deps.append(self.arcs[i][1])
 
         deps.sort()
-        deps = deps[len(deps) - n_to_get:].reverse()
+        deps.reverse()
+        deps = deps[0:n_to_get]
         # *** END YOUR CODE ***
         return deps
 
