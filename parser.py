@@ -326,6 +326,7 @@ def minibatch_parse(sentences, model, batch_size):
     partial_parses = []
     for sentence in sentences:
         partial_parses.append(PartialParse(sentence))
+        arcs.append([])
     unfinished_parses = [i for i in range(len(sentences))]
     while unfinished_parses:
         idx_minibatch = unfinished_parses[:batch_size]
@@ -334,14 +335,15 @@ def minibatch_parse(sentences, model, batch_size):
         for i in range(len(minibatch)):
             transition_id = transitions[i][0]
             deprel = transitions[i][1]
+            idx_pp = idx_minibatch[i]
             try:
                 minibatch[i].parse_step(transition_id, deprel)
                 if minibatch[i].complete:
-                    arcs.append(minibatch[i].arcs)
-                    unfinished_parses.remove(idx_minibatch[i])
+                    arcs[idx_pp] = minibatch[i].arcs
+                    unfinished_parses.remove(idx_pp)
             except ValueError:
-                arcs.append(minibatch[i].arcs)
-                unfinished_parses.remove(idx_minibatch[i])
+                arcs[idx_pp] = minibatch[i].arcs
+                unfinished_parses.remove(idx_pp)
     # *** END YOUR CODE ***
     return arcs
 
