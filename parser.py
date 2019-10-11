@@ -134,11 +134,9 @@ class PartialParse(object):
             n_to_get = n
 
         deps = []
-        word = self.sentence[sentence_idx][0]
 
         for dependency in self.arcs:
-            idx_head = dependency[0]
-            if self.sentence[idx_head][0] == word:
+            if dependency[0] == sentence_idx:
                 deps.append(dependency[1])
 
         deps.sort()
@@ -183,15 +181,12 @@ class PartialParse(object):
             n_to_get = n
 
         deps = []
-        word = self.sentence[sentence_idx][0]
 
         for dependency in self.arcs:
-            idx_head = dependency[0]
-            if self.sentence[idx_head][0] == word:
+            if dependency[0] == sentence_idx:
                 deps.append(dependency[1])
 
-        deps.sort()
-        deps.reverse()
+        deps.sort(reverse=True)
         deps = deps[0:n_to_get]
         # *** END YOUR CODE ***
         return deps
