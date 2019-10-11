@@ -233,7 +233,7 @@ class PartialParse(object):
             raise ValueError('PartialParse already completed')
         transition_id, deprel = -1, None
         # *** BEGIN YOUR CODE ***
-        '''
+
         idx_first = self.stack[-1]
         idx_second = self.stack[len(self.stack) - 2]
 
@@ -249,26 +249,7 @@ class PartialParse(object):
             deprel = graph.nodes[idx_second]['rel']
         else:
             transition_id = self.shift_id
-        '''
-        if len(self.stack) < 2:
-            return self.shift_id, None
 
-            # Left-Arc case:
-        if graph.nodes[self.stack[-2]]['head'] == self.stack[-1]:
-            for key in graph.nodes[self.stack[-1]]['deps']:
-                if self.stack[-2] in graph.nodes[self.stack[-1]]['deps'][key]:
-                    return self.left_arc_id, key
-        if graph.nodes[self.stack[-1]]['head'] == self.stack[-2]:
-            deps = get_deps(graph.nodes[self.stack[-1]])
-            deps = [dep for dep in deps]
-            if len(deps) == 0 or max(deps) < self.next:
-                for key in graph.nodes[self.stack[-2]]['deps']:
-                    if self.stack[-1] in graph.nodes[self.stack[-2]]['deps'][key]:
-                        return self.right_arc_id, key
-        if self.next < len(self.sentence):
-            return self.shift_id, None
-        else:
-            raise ValueError
         # *** END YOUR CODE ***
         return transition_id, deprel
 
@@ -320,14 +301,14 @@ def minibatch_parse(sentences, model, batch_size):
             arcs[i] should contain the arcs for sentences[i]).
     """
     # *** BEGIN YOUR CODE ***
-    '''
     arcs = []
     partial_parsers = []
     for sentence in sentences:
         partial_parsers.append(PartialParse(sentence))
-    unfinished_parses = partial_parsers
+    unfinished_parses = [i for i in range(len(sentences))]
     while unfinished_parses:
-        minibatch = unfinished_parses[:batch_size]
+        idx_minibatch = unfinished_parses[:batch_size]
+        minibatch = [partial_parsers[idx] for idx in idx_minibatch]
         transitions = model.predict(minibatch)
         for i in range(len(minibatch)):
             transition_id = transitions[i][0]
@@ -340,24 +321,6 @@ def minibatch_parse(sentences, model, batch_size):
                 unfinished_parses = unfinished_parses[:i] + unfinished_parses[i + 1:]
     for parser in partial_parsers:
         arcs.append(parser.arcs)
-    '''
-    arcs = [[] for i in range(len(sentences))]
-    partial_parses = [PartialParse(s) for s in sentences]
-    unfinished_parses = [i for i in range(len(sentences))]
-    while unfinished_parses:
-        batch_parses_idx = unfinished_parses[:batch_size]
-        batch_parses = [partial_parses[i] for i in batch_parses_idx]
-        td_pairs = model.predict(batch_parses)
-        for i, td_pair in enumerate(td_pairs):
-            parse_idx = unfinished_parses[i]
-            try:
-                partial_parses[parse_idx].parse_step(*td_pair)
-                if partial_parses[parse_idx].complete:
-                    arcs[parse_idx] = partial_parses[parse_idx].arcs
-                    batch_parses_idx.remove(parse_idx)
-            except ValueError:
-                batch_parses_idx.remove(parse_idx)
-        unfinished_parses = batch_parses_idx + unfinished_parses[batch_size:]
     # *** END YOUR CODE ***
     return arcs
 
