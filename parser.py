@@ -57,7 +57,6 @@ class PartialParse(object):
         Assume that the PartialParse is valid
         """
         # *** BEGIN YOUR CODE ***
-        # return self.next == len(self.sentence) and len(self.stack) == 1
         if self.next == len(self.sentence) and len(self.stack) == 1:
             return True
         # *** END YOUR CODE ***
@@ -81,24 +80,6 @@ class PartialParse(object):
                 given the current state
         """
         # *** BEGIN YOUR CODE ***
-        # if transition_id == self.left_arc_id:
-        #     if len(self.stack) < 3:
-        #         raise ValueError
-        #     self.arcs.append((self.stack[-1], self.stack[-2], deprel))
-        #     self.stack.pop(-2)
-        # elif transition_id == self.right_arc_id:
-        #     if len(self.stack) < 2:
-        #         raise ValueError
-        #     self.arcs.append((self.stack[-2], self.stack[-1], deprel))
-        #     self.stack.pop(-1)
-        # elif transition_id == self.shift_id:
-        #     if (self.next >= len(self.sentence)):
-        #         raise ValueError(
-        #             "Detect next {} is greater or equal to length of sentence {}".format(self.next, len(self.sentence)))
-        #     self.stack.append(self.next)
-        #     self.next += 1
-        # else:
-        #     raise ValueError
         if transition_id == self.shift_id and self.next < len(self.sentence):
             self.stack.append(self.next)
             self.next += 1
@@ -137,33 +118,31 @@ class PartialParse(object):
                 1, etc.
         """
         # *** BEGIN YOUR CODE ***
-        deps = list()
-        for idx_head, idx_dep, deprel in self.arcs:
-            if idx_head == sentence_idx:
-                deps.append(idx_dep)
-        deps.sort()
-        if n is None:
-            num = n
-        else:
-            num = n if len(deps) > n else len(deps)
-        deps = deps[:num]
-        # if not n and n != 0:
-        #     n_to_get = len(self.arcs)
+        # deps = list()
+        # for idx_head, idx_dep, deprel in self.arcs:
+        #     if idx_head == sentence_idx:
+        #         deps.append(idx_dep)
+        # deps.sort()
+        # if n is None:
+        #     num = n
         # else:
-        #     n_to_get = n
-        #
-        # deps = []
-        # n_in_list = 0
-        # word = self.sentence[sentence_idx][0]
-        #
-        # for dependency in self.arcs:
-        #     idx_head = dependency[0]
-        #     if self.sentence[idx_head][0] == word:
-        #         deps.append(dependency[1])
-        #         n_in_list += 1
-        #         if n_in_list >= n_to_get:
-        #             break
-        # deps = deps[0:n_to_get]
+        #     num = n if len(deps) > n else len(deps)
+        # deps = deps[:num]
+        if not n and n != 0:
+            n_to_get = len(self.arcs)
+        else:
+            n_to_get = n
+
+        deps = []
+        word = self.sentence[sentence_idx][0]
+
+        for dependency in self.arcs:
+            idx_head = dependency[0]
+            if self.sentence[idx_head][0] == word:
+                deps.append(dependency[1])
+
+        deps.sort()
+        deps = deps[0:n_to_get]
         # *** END YOUR CODE ***
         return deps
 
@@ -187,34 +166,32 @@ class PartialParse(object):
                 1, etc.
         """
         # *** BEGIN YOUR CODE ***
-        deps = list()
-        for idx_head, idx_dep, deprel in self.arcs:
-            if idx_head == sentence_idx:
-                deps.append(idx_dep)
-        deps.sort(reverse=True)
-        if n is None:
-            num = n
-        else:
-            num = n if len(deps) > n else len(deps)
-        deps = deps[:num]
-        # if not n:
-        #     n_to_get = len(self.arcs)
+        # deps = list()
+        # for idx_head, idx_dep, deprel in self.arcs:
+        #     if idx_head == sentence_idx:
+        #         deps.append(idx_dep)
+        # deps.sort(reverse=True)
+        # if n is None:
+        #     num = n
         # else:
-        #     n_to_get = n
-        #
-        # deps = []
-        # n_in_list = 0
-        # word = self.sentence[sentence_idx][0]
-        #
-        # for i in range(len(self.arcs) - 1, -1, -1):
-        #     idx_head = self.arcs[i][0]
-        #     if self.sentence[idx_head][0] == word:
-        #         deps.append(self.arcs[i][1])
-        #         n_in_list += 1
-        #         if n_in_list >= n_to_get:
-        #             break
-        #
-        # deps = deps[0:n_to_get]
+        #     num = n if len(deps) > n else len(deps)
+        # deps = deps[:num]
+
+        if not n:
+            n_to_get = len(self.arcs)
+        else:
+            n_to_get = n
+
+        deps = []
+        word = self.sentence[sentence_idx][0]
+
+        for i in range(len(self.arcs) - 1, -1, -1):
+            idx_head = self.arcs[i][0]
+            if self.sentence[idx_head][0] == word:
+                deps.append(self.arcs[i][1])
+
+        deps.sort()
+        deps = deps[0:n_to_get]
         # *** END YOUR CODE ***
         return deps
 
