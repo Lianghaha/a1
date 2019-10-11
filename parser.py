@@ -84,8 +84,8 @@ class PartialParse(object):
             self.stack.append(self.next)
             self.next += 1
 
-        elif transition_id == self.left_arc_id and len(self.stack) > 1:
-            idx_dep = self.stack.pop(len(self.stack) - 2)
+        elif transition_id == self.left_arc_id and len(self.stack) > 2:
+            idx_dep = self.stack.pop(-2)
             idx_head = self.stack[-1]
             self.arcs.append((idx_head, idx_dep, deprel))
 
@@ -233,6 +233,7 @@ class PartialParse(object):
             raise ValueError('PartialParse already completed')
         transition_id, deprel = -1, None
         # *** BEGIN YOUR CODE ***
+        '''
         idx_first = self.stack[-1]
         idx_second = self.stack[len(self.stack) - 2]
 
@@ -248,6 +249,26 @@ class PartialParse(object):
             deprel = graph.nodes[idx_second]['rel']
         else:
             transition_id = self.shift_id
+        '''
+        if len(self.stack) < 2:
+            return self.shift_id, None
+
+            # Left-Arc case:
+        if graph.nodes[self.stack[-2]]['head'] == self.stack[-1]:
+            for key in graph.nodes[self.stack[-1]]['deps']:
+                if self.stack[-2] in graph.nodes[self.stack[-1]]['deps'][key]:
+                    return self.left_arc_id, key
+        if graph.nodes[self.stack[-1]]['head'] == self.stack[-2]:
+            deps = get_deps(graph.nodes[self.stack[-1]])
+            deps = [dep for dep in deps]
+            if len(deps) == 0 or max(deps) < self.next:
+                for key in graph.nodes[self.stack[-2]]['deps']:
+                    if self.stack[-1] in graph.nodes[self.stack[-2]]['deps'][key]:
+                        return self.right_arc_id, key
+        if self.next < len(self.sentence):
+            return self.shift_id, None
+        else:
+            raise ValueError
         # *** END YOUR CODE ***
         return transition_id, deprel
 
