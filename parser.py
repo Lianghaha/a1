@@ -118,16 +118,6 @@ class PartialParse(object):
                 1, etc.
         """
         # *** BEGIN YOUR CODE ***
-        # deps = list()
-        # for idx_head, idx_dep, deprel in self.arcs:
-        #     if idx_head == sentence_idx:
-        #         deps.append(idx_dep)
-        # deps.sort()
-        # if n is None:
-        #     num = n
-        # else:
-        #     num = n if len(deps) > n else len(deps)
-        # deps = deps[:num]
         if not n and n != 0:
             n_to_get = len(self.arcs)
         else:
@@ -164,16 +154,6 @@ class PartialParse(object):
                 1, etc.
         """
         # *** BEGIN YOUR CODE ***
-        # deps = list()
-        # for idx_head, idx_dep, deprel in self.arcs:
-        #     if idx_head == sentence_idx:
-        #         deps.append(idx_dep)
-        # deps.sort(reverse=True)
-        # if n is None:
-        #     num = n
-        # else:
-        #     num = n if len(deps) > n else len(deps)
-        # deps = deps[:num]
 
         if not n and n != 0:
             n_to_get = len(self.arcs)
