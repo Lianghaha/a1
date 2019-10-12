@@ -227,7 +227,7 @@ class PartialParse(object):
         # *** BEGIN YOUR CODE ***
 
         idx_first = self.stack[-1]
-        idx_second = self.stack[len(self.stack) - 2]
+        idx_second = self.stack[-2]
 
         idx_removed = [item[1] for item in self.arcs]
         first_dep = list(set(get_deps(graph.nodes[idx_first])) - set(idx_removed))
